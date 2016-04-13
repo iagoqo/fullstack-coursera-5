@@ -1,3 +1,5 @@
+/*jshint esversion:6*/
+
 var express = require('express');
 var morgan = require('morgan');
 
@@ -18,10 +20,12 @@ app.listen(port, hostname, function() {
 
 
 function auth(req, res, next) {
+  var err;
   console.log(req.headers);
+
   var authHeader = req.headers.authorization;
   if (!authHeader) {
-    var err = new Error('You are not authenticated!');
+    err = new Error('You are not authenticated!');
     err.status = 401;
     next(err);
     return;
@@ -33,7 +37,7 @@ function auth(req, res, next) {
   if (user == 'admin' && pass == 'password') {
     next(); // authorized
   } else {
-    var err = new Error('You are not authenticated!');
+    err = new Error('You are not authenticated!');
     err.status = 401;
     next(err);
   }
