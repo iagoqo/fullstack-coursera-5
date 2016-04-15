@@ -23,6 +23,18 @@ var commentSchema = new Schema({
   timestamps: true
 });
 
+/*
+Example dish
+{
+  name: required,
+  image: required,
+  category: required,
+  label: optional,
+  price: required,
+  description: required,
+  comments: [commentSchema]
+}
+*/
 var dishSchema = new Schema({
   name: {
     type: String,

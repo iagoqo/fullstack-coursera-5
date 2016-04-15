@@ -2,13 +2,19 @@ var User = require('../models/user');
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('../config.js');
 
-exports.getToken = function(user) {
+exports.getToken = getToken;
+exports.verifyOrdinaryUser = verifyOrdinaryUser;
+exports.verifyAdmin = verifyAdmin;
+
+/////
+
+function getToken(user) {
   return jwt.sign(user, config.secretKey, {
     expiresIn: 3600
   });
-};
+}
 
-exports.verifyOrdinaryUser = function(req, res, next) {
+function verifyOrdinaryUser(req, res, next) {
   // check header or url parameters or post parameters for token
   var token = req.body.token || req.query.token || req.headers['x-access-token'];
 
@@ -33,4 +39,15 @@ exports.verifyOrdinaryUser = function(req, res, next) {
     error.status = 403;
     return next(error);
   }
-};
+}
+
+function verifyAdmin(req, res, next) {
+  var admin = req.decoded._doc.admin;
+
+  if (admin) {
+    next();
+  } else {
+    var error = new Error('Not an admin!');
+    return next(error);
+  }
+}
